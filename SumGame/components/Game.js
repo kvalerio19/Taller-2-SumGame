@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import RandomNumber from './RandomNumber';
 
 
 const target = 10 + Math.floor(40* Math.random());
@@ -15,9 +16,11 @@ export default Game = ({randomNumbersCount})=>{
     return(
     <View>
         <Text style={styles.target}>{target}</Text>
+        <View style={styles.randomContainer}>
         {randomNumbers.map((randomNumber, index)=> (
-        <Text key={index}>{randomNumber}</Text>
+        <RandomNumber key={index} number={randomNumber}/>
         ))}
+        </View>
     </View>
     );
     };
@@ -28,5 +31,13 @@ const styles = StyleSheet.create({
         fontSize: 40,
         backgroundColor: '#aaa',
         textAlign: 'center',
-    }
+    },
+    randomContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: "space-between",
+
+    },
+    
 });
