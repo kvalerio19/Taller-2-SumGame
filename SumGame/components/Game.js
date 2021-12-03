@@ -17,7 +17,12 @@ export default Game = ({randomNumbersCount})=>{
 //  .reduce((acc, cur)=> acc+cur,0);
 
 useEffect(()=>{
+    const firstRandomNumbers = Array.from({length: randomNumbersCount}).map(()=> 1+Math.floor(10* Math.random()));
+    const firstTarget = firstRandomNumbers.slice(0, randomNumbersCount - 2)
+    .reduce((acc, cur)=> acc+cur,0);
 
+    setRandomNumbers(firstRandomNumbers);
+    setTarget(firstTarget);
 }, []);
 
 
@@ -25,12 +30,27 @@ useEffect(()=>{
 
  const selectNumber = number => setSelectedNumbers( [ ...selectedNumbers, number ]);
 
+ const gameStatus = ()=>{
+     const numSelected = selectedNumbers.reduce((acc, cur)=> acc + randomNumbers[cur],0);
+     console.info('numSelected', numSelected);
+     if (numSelected < target) {
+         return 'PLAYING'
+     }else if (numSelected === target){
+         return 'WON'
+     }else{
+         return 'LOST'
+     }
+ }
+
+    const status = gameStatus();
+
     return(
     <View>
-        <Text style={styles.target}>{target}</Text>
+        <Text style={[styles.target, styles[status]]}>{target}</Text>
+        <Text>{status}</Text>
         <View style={styles.randomContainer}>
         {randomNumbers.map((randomNumber, index)=> (
-        <RandomNumber key={index} id={index} number={randomNumber} isSelected={isNumberSelected(index)} onSelected={selectNumber}/>
+        <RandomNumber key={index} id={index} number={randomNumber} isSelected={isNumberSelected(index) || status !== 'PLAYING'} onSelected={selectNumber}/>
         ))}
         </View>
     </View>
@@ -50,6 +70,15 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         justifyContent: "space-between",
 
+    },
+    PLAYING: {
+        backgroundColor: '#bbb',
+    },
+    WON: {
+        backgroundColor:'green',
+    },
+    LOST: {
+        backgroundColor: 'red',
     },
     
 });

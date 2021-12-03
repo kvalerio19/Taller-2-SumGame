@@ -5,9 +5,11 @@ import React from 'react';
 export default RandomNumber =({id, number, isSelected, onSelected})=> {
 
     const handlePress = ()=> {
-        console.log(number);
+        console.info('number', number);
+        if (!isSelected){
         onSelected(id);
     }
+}
 
     return(
     <TouchableOpacity onPress={handlePress}>
