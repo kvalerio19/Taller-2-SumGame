@@ -1,56 +1,78 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import RandomNumber from './RandomNumber';
+import shuffle from 'lodash.shuffle';
+
+let intervalId;
+
+//onst target = 10 + Math.floor(40* Math.random());
 
 
-const target = 10 + Math.floor(40* Math.random());
 
-
-
-export default Game = ({randomNumbersCount})=>{
+export default Game = ({randomNumbersCount, initialSeconds})=>{
  const [selectedNumbers, setSelectedNumbers] = useState([]);   
  const [randomNumbers, setRandomNumbers] = useState ([]);
- const [target, setTarget] = useState(0);
+ const [target, setTarget] = useState(1);
+
+ const [remainingSeconds, setRemainingSeconds] = useState(initialSeconds)
+ const [gameStatus, setGameStatus] = useState('PLAYING');
+
+
 //  const randomNumbers = Array.from({length: randomNumbersCount})
 //  .map(()=> 1 + Math.floor(10 * Math.random()));
 //  const target = randomNumbers.slice(0, randomNumbersCount - 2)
 //  .reduce((acc, cur)=> acc+cur,0);
 
+
 useEffect(()=>{
     const firstRandomNumbers = Array.from({length: randomNumbersCount}).map(()=> 1+Math.floor(10* Math.random()));
     const firstTarget = firstRandomNumbers.slice(0, randomNumbersCount - 2)
     .reduce((acc, cur)=> acc+cur,0);
+    const shuffledRandomNumbers = shuffle(firstRandomNumbers);
 
-    setRandomNumbers(firstRandomNumbers);
+    setRandomNumbers(shuffledRandomNumbers);
     setTarget(firstTarget);
+
+    intervalId = setInterval(()=> {
+        setRemainingSeconds((seconds)=> seconds-1);
+    }, 1000);
+    return()=> clearInterval(intervalId);
+    
 }, []);
+
+useEffect(()=> {
+    setGameStatus(()=> getGameStatus());
+    if (remainingSeconds ===0 || gameStatus !== 'PLAYING'){
+        clearInterval(intervalId);
+    }
+}, [remainingSeconds, selectedNumbers]);
 
 
  const isNumberSelected = numberIndex => selectedNumbers.some(number=> number === numberIndex);
 
  const selectNumber = number => setSelectedNumbers( [ ...selectedNumbers, number ]);
 
- const gameStatus = ()=>{
+ const getGameStatus = ()=>{
      const numSelected = selectedNumbers.reduce((acc, cur)=> acc + randomNumbers[cur],0);
-     console.info('numSelected', numSelected);
-     if (numSelected < target) {
-         return 'PLAYING'
+     if (remainingSeconds ===0 || numSelected > target) {
+         return 'LOST';
      }else if (numSelected === target){
-         return 'WON'
+         return 'WON';
      }else{
-         return 'LOST'
+         return 'PLAYING';
      }
  }
 
-    const status = gameStatus();
+    //const status = gameStatus();
 
     return(
     <View>
-        <Text style={[styles.target, styles[status]]}>{target}</Text>
-        <Text>{status}</Text>
+        <Text style={[styles.target, styles[gameStatus]]}>{target}</Text>
+        <Text>{gameStatus}</Text>
+        <Text>{remainingSeconds}</Text>
         <View style={styles.randomContainer}>
         {randomNumbers.map((randomNumber, index)=> (
-        <RandomNumber key={index} id={index} number={randomNumber} isSelected={isNumberSelected(index) || status !== 'PLAYING'} onSelected={selectNumber}/>
+        <RandomNumber key={index} id={index} number={randomNumber} isSelected={isNumberSelected(index) || gameStatus !== 'PLAYING'} onSelected={selectNumber}/>
         ))}
         </View>
     </View>
