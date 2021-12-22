@@ -72,12 +72,11 @@ useEffect(()=> {
  }
 
 
-
     return(
     <View>
         <Text style={[styles.target, styles[gameStatus]]}>{target}</Text>
         <Text>{gameStatus}</Text>
-        {gameStatus !== "PLAYING" && <Button style={styles.button} title="Play Again" />}
+        {gameStatus !== "PLAYING" && <Button style={styles.button} title="Play Again" onClick={() => window.location.reload(false)} />}
         <Text>{remainingSeconds}</Text>
         <View style={styles.randomContainer}>
         {randomNumbers.map((randomNumber, index)=> (
