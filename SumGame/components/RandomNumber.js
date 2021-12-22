@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {Button, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 
 
@@ -14,9 +14,12 @@ export default RandomNumber =({id, number, isSelected, onSelected})=> {
     return(
     <TouchableOpacity onPress={handlePress}>
     <Text style={[styles.random, isSelected && styles.selected]}>{number}</Text>
+    
     </TouchableOpacity>
+    
     );
 }
+
 
 
 const styles = StyleSheet.create({

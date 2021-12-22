@@ -1,16 +1,30 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
+//import { Button } from 'react-native-elements/dist/buttons/Button';
 import Game from './components/Game';
 
+
 export default function App() {
+  
   return (
+    
     <View style={styles.container}>
-      <Game randomNumbersCount={6} initialSeconds={10}/>
+      <Game randomNumbersCount={6} initialSeconds={10}
+       
+      />
       <StatusBar style="auto" />
+     
+
     </View>
+
+    
+    
+    
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -19,4 +33,6 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingHorizontal: 50,
   },
+  
+  
 });
